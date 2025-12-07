@@ -1,4 +1,4 @@
-import neopixel
+import adafruit_neopixel as neopixel
 from gpiozero import Device
 
 # Use the built-in neopixel driver device
