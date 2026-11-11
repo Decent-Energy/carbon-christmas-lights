@@ -35,11 +35,11 @@ NTP_RESYNC_S = 12 * 60 * 60
 
 # Colours as (red, green, blue) at full brightness, by API index.
 INDEX_COLOURS = {
-    "very low": (0, 255, 120),   # blue-green
-    "low": (0, 255, 0),          # green
-    "moderate": (255, 255, 0),   # yellow
-    "high": (255, 0, 0),         # red
-    "very high": (160, 0, 255),  # purple
+    "very low": (0, 110, 0),     # dark green
+    "low": (90, 255, 0),         # light green
+    "moderate": (255, 180, 0),   # yellow
+    "high": (255, 80, 0),        # amber
+    "very high": (255, 0, 0),    # red
 }
 OFF = (0, 0, 0)
 
