@@ -9,8 +9,8 @@ intensity: one LED per half-hour period, oldest first, coloured by the
 | very low | blue-green |
 | low | green |
 | moderate | yellow |
-| high | amber |
-| very high | red |
+| high | red |
+| very high | purple |
 
 After each update the pattern runs round the string four times, then holds
 still until the next half-hour.

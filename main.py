@@ -38,8 +38,8 @@ INDEX_COLOURS = {
     "very low": (0, 255, 120),   # blue-green
     "low": (0, 255, 0),          # green
     "moderate": (255, 255, 0),   # yellow
-    "high": (255, 165, 0),       # amber
-    "very high": (255, 0, 0),    # red
+    "high": (255, 0, 0),         # red
+    "very high": (160, 0, 255),  # purple
 }
 OFF = (0, 0, 0)
 
