@@ -1,0 +1,4 @@
+# Files the Pico keeps up to date from GitHub, one per line.
+# main.py, remote.py and config.py are never updated this way.
+lights.py
+test_leds.py

@@ -1,8 +1,8 @@
 """LED test for the Pico 2 W: checks the wiring, then previews every colour.
 
-Run it with `mpremote run test_leds.py` (or from Thonny). It needs main.py
-and config.py on the Pico, because it uses the colours and settings from
-them; copy main.py again after changing a colour.
+Run it with `mpremote run test_leds.py` (or from Thonny). It needs lights.py,
+remote.py and config.py on the Pico, because it uses the colours and settings
+from them; copy lights.py again after changing a colour.
 
 1. Wipes the string red, green, blue. If red and green come out swapped,
    switch COLOUR_ORDER in config.py between "RGB" and "GRB".
@@ -12,7 +12,7 @@ them; copy main.py again after changing a colour.
 import time
 
 import config
-from main import INDEX_COLOURS, OFF, scale, show, strip
+from lights import INDEX_COLOURS, OFF, scale, show, strip
 
 # MicroPython dictionaries don't keep their order, so spell it out here.
 BANDS = ("very low", "low", "moderate", "high", "very high")
