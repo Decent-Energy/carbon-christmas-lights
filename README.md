@@ -53,8 +53,8 @@ still until the next half-hour.
    ```
 
 4. Check the wiring: `mpremote run test_leds.py` should wipe the string red,
-   green, blue, then off. If red and green are swapped, set
-   `COLOUR_ORDER = "RGB"` in `config.py`.
+   green, blue, then off. If red and green are swapped, change
+   `COLOUR_ORDER` in `config.py` between `"RGB"` and `"GRB"`.
 5. Reset the Pico. `main.py` starts on its own at power-up.
 
 The onboard LED blinks while joining WiFi, stays on while updates succeed,

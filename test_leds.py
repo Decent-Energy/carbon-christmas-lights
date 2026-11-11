@@ -1,7 +1,7 @@
 """Wiring test for the Pico 2 W: wipes the string red, green, blue, then off.
 
 Run it from Thonny or with `mpremote run test_leds.py`. If red and green
-come out swapped, set COLOUR_ORDER = "RGB" in config.py.
+come out swapped, switch COLOUR_ORDER in config.py between "RGB" and "GRB".
 """
 import time
 
