@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carbon Christmas Lights</title>
+<meta name="description" content="Why the carbon Christmas lights are the colour they are: the last 50 hours of Great Britain's electricity, one light per half-hour.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Dosis:wght@500;600&family=Poppins:wght@400;500&display=swap">
+<style>
+  /* Decent Energy design tokens (from the Decent Energy Design System) */
+  :root {
+    --de-blue: #0A668C; --de-blue-900: #053449; --de-blue-300: #8BB3CC;
+    --de-green-500: #A4C853; --de-cream: #F5F1E9;
+    --font-display: 'Garet', 'Bricolage Grotesque', 'Helvetica Neue', sans-serif;
+    --font-body: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-ui: 'Dosis', 'Poppins', system-ui, sans-serif;
+    /* the five light colours, matched to the LEDs on the string */
+    --very-low: #2a9a45; --low: #93dd3c; --moderate: #ffd21f; --high: #ff9124; --very-high: #f4433a;
+    --unknown: #2b5873;
+  }
+  * { box-sizing: border-box; }
+  html { background: #07435e; }
+  body { margin: 0; color: var(--de-cream); font: 400 16px/1.5 var(--font-body);
+    background: linear-gradient(180deg, var(--de-blue-900), #07435e) fixed; }
+  main { min-height: 100vh; max-width: 1800px; margin: 0 auto; padding: clamp(16px, 3.6vh, 56px) clamp(18px, 5vw, 96px);
+    display: grid; grid-template-rows: auto auto 1fr auto auto; gap: clamp(10px, 2.2vh, 36px); }
+  p { margin: 0; }
+  .eyebrow { font: 600 clamp(.8rem, 1.05vw, 1.25rem)/1.2 var(--font-ui); text-transform: uppercase;
+    letter-spacing: .18em; color: var(--de-green-500); }
+  .meta { font: 500 clamp(.85rem, 1vw, 1.15rem)/1.4 var(--font-ui); letter-spacing: .04em; color: var(--de-blue-300); }
+
+  header { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+
+  .hero { display: grid; grid-template-columns: 1fr auto; gap: clamp(20px, 5vw, 96px); align-items: center; }
+  h1 { font: 800 clamp(2rem, min(5.6vw, 9.6vh), 6.2rem)/1.03 var(--font-display); text-transform: uppercase; letter-spacing: .03em;
+    margin: 0 0 clamp(12px, 2.2vh, 28px); text-wrap: balance; }
+  #why { font-size: clamp(1.05rem, min(1.75vw, 3vh), 2.05rem); line-height: 1.42; max-width: 50ch; text-wrap: pretty; }
+  .reading { text-align: center; }
+  .bulb { width: clamp(88px, min(11vw, 19vh), 200px); aspect-ratio: 1; border-radius: 50%; margin: 0 auto clamp(14px, 2.4vh, 28px);
+    background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.55), transparent 42%), var(--c, var(--unknown));
+    box-shadow: 0 0 clamp(40px, 6vw, 110px) clamp(6px, 1.2vw, 22px) var(--c, transparent);
+    transition: background-color 420ms, box-shadow 420ms; }
+  .stat { font: 800 clamp(2.6rem, min(5.4vw, 9vh), 5.6rem)/1 var(--font-display); letter-spacing: -.01em; }
+  .stat small { display: block; margin-top: 8px; font: 600 clamp(.8rem, 1.05vw, 1.25rem)/1.3 var(--font-ui);
+    letter-spacing: .18em; text-transform: uppercase; color: var(--de-blue-300); }
+
+  /* the string */
+  .garland { align-self: center; }
+  #string { display: block; width: 100%; height: auto; overflow: visible; }
+  #string .wire { fill: none; stroke: rgba(139, 179, 204, .4); stroke-width: 1.2; }
+  #string .halo { opacity: .5; }
+  #string .core { stroke: rgba(5, 52, 73, .55); stroke-width: .8; }
+  #string .tick { font: 600 9px var(--font-ui); letter-spacing: .14em; text-transform: uppercase; fill: var(--de-blue-300); }
+  @media (prefers-reduced-motion: no-preference) {
+    #string .halo { animation: twinkle 3.6s ease-in-out infinite; }
+    #string .now-ring { animation: pulse 2.4s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+  }
+  @keyframes twinkle { 50% { opacity: .22; } }
+  @keyframes pulse { from { transform: scale(1); opacity: .9; } to { transform: scale(2.4); opacity: 0; } }
+  .caption { display: flex; justify-content: space-between; gap: 16px; margin-top: clamp(6px, 1.2vh, 14px); }
+
+  .bottom { display: grid; grid-template-columns: 1fr auto; gap: clamp(20px, 4vw, 72px); align-items: end; }
+  .mix { display: flex; gap: clamp(18px, 3.2vw, 64px); flex-wrap: wrap; margin-top: 10px; }
+  .mix b { display: block; font: 800 clamp(1.7rem, min(3vw, 5.4vh), 3.4rem)/1 var(--font-display); }
+  .mix span { font: 600 clamp(.78rem, .95vw, 1.1rem)/1.3 var(--font-ui); letter-spacing: .18em; text-transform: uppercase;
+    color: var(--de-blue-300); }
+  .legend { display: flex; gap: clamp(12px, 1.6vw, 28px); flex-wrap: wrap; list-style: none; padding: 0; margin: 10px 0 0; }
+  .legend li { font: 500 clamp(.85rem, 1vw, 1.15rem)/1.3 var(--font-ui); letter-spacing: .04em; white-space: nowrap; }
+  .legend i { display: inline-block; width: .8em; height: .8em; border-radius: 50%; background: var(--c);
+    box-shadow: 0 0 8px 1px var(--c); margin-right: .5em; vertical-align: -.05em; }
+
+  footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    padding-top: clamp(10px, 1.6vh, 18px); border-top: 1px solid rgba(245, 241, 233, .14); }
+  footer a { color: inherit; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+
+  @media (max-width: 760px) {
+    .hero { grid-template-columns: 1fr; }
+    .reading { display: flex; align-items: center; gap: 18px; text-align: left; order: -1; }
+    .bulb { margin: 0; flex: none; }
+    .bottom { grid-template-columns: 1fr; align-items: start; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow">Carbon Christmas Lights</p>
+    <p class="eyebrow" style="color:var(--de-blue-300)">Decent Energy · CISL Canopy</p>
+  </header>
+
+  <section class="hero" aria-live="polite">
+    <div>
+      <h1 id="headline">Checking the grid…</h1>
+      <p id="why">Fetching the latest half-hour of Great Britain's electricity data.</p>
+    </div>
+    <div class="reading">
+      <div class="bulb" id="bulb" aria-hidden="true"></div>
+      <p class="stat num"><span id="value">–</span><small id="unit">g CO₂ per kWh</small></p>
+    </div>
+  </section>
+
+  <section class="garland">
+    <svg id="string" role="img" aria-label="The string of 100 lights"></svg>
+    <div class="caption meta"><span id="oldest">50 hours ago</span><span>Each light is one half-hour of Britain's electricity</span><span id="newest">Now</span></div>
+  </section>
+
+  <section class="bottom">
+    <div>
+      <p class="eyebrow">Where the power is coming from</p>
+      <div class="mix" id="mix"></div>
+    </div>
+    <div>
+      <p class="eyebrow">Carbon in the electricity</p>
+      <ul class="legend" id="legend"></ul>
+    </div>
+  </section>
+
+  <footer class="meta">
+    <span>Built by <a href="https://www.decentenergy.io">Decent Energy</a> — driven by data, powered by you.</span>
+    <span>Live data: <a href="https://carbonintensity.org.uk/">Carbon Intensity API</a> · <span id="updated"></span></span>
+  </footer>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var API = "https://api.carbonintensity.org.uk";
+  var COUNT = 100, PERIOD = 30 * 60 * 1000, SVGNS = "http://www.w3.org/2000/svg";
+  var BANDS = ["very low", "low", "moderate", "high", "very high"];
+  var COLOUR = { "very low": "dark green", "low": "light green", "moderate": "yellow", "high": "amber", "very high": "red" };
+  var $ = function (id) { return document.getElementById(id); };
+  var periods = [], timer = null;
+
+  function cssVar(band) { return band ? "var(--" + band.replace(" ", "-") + ")" : "var(--unknown)"; }
+  function iso(d) { return d.toISOString().slice(0, 16) + "Z"; }
+  function fmt(opts) { return new Intl.DateTimeFormat("en-GB", Object.assign({ timeZone: "Europe/London" }, opts)); }
+  var fDay = fmt({ weekday: "long" }), fTime = fmt({ hour: "2-digit", minute: "2-digit", hour12: false });
+  function londonHour(d) { return parseInt(fmt({ hour: "2-digit", hour12: false }).format(d), 10) % 24; }
+  function pct(x) { return Math.round(x) + "%"; }
+  function el(tag, text) { var e = document.createElement(tag); if (text != null) e.textContent = text; return e; }
+  function svg(tag, attrs) { var e = document.createElementNS(SVGNS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); return e; }
+  function listJoin(a) { return a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " and " + a[a.length - 1]; }
+
+  function getJSON(path) {
+    return fetch(API + path, { headers: { Accept: "application/json" } }).then(function (r) {
+      if (!r.ok) throw new Error("status " + r.status);
+      return r.json();
+    });
+  }
+
+  function load() {
+    clearTimeout(timer);
+    var end = Math.floor(Date.now() / PERIOD) * PERIOD;
+    var range = "/" + iso(new Date(end - COUNT * PERIOD)) + "/" + iso(new Date(end));
+    Promise.all([
+      getJSON("/intensity" + range),
+      getJSON("/generation" + range).catch(function () { return null; })   // the lights still make sense without it
+    ]).then(function (res) {
+      var mixes = {};
+      ((res[1] && res[1].data) || []).forEach(function (g) {
+        var m = {};
+        (g.generationmix || []).forEach(function (f) { m[f.fuel] = f.perc; });
+        mixes[g.from] = m;
+      });
+      var fresh = (res[0].data || []).slice(-COUNT).map(function (e) {
+        var i = e.intensity || {};
+        return { from: new Date(e.from), to: new Date(e.to), index: i.index || null,
+                 value: i.actual != null ? i.actual : i.forecast, mix: mixes[e.from] || null };
+      });
+      if (!fresh.length) throw new Error("no data");
+      periods = fresh;
+      render();
+    }).catch(function () {
+      // keep whatever is on screen; only say so if there is nothing to show yet
+      if (!periods.length) {
+        $("headline").textContent = "Waiting for the grid data";
+        $("why").textContent = "We can't reach the Carbon Intensity API at the moment. This page will keep trying.";
+      }
+    }).then(function () {
+      // refresh two minutes after the next half-hour starts, like the lights do; sooner if there is nothing yet
+      timer = setTimeout(load, periods.length ? PERIOD - Date.now() % PERIOD + 120000 : 60000);
+    });
+  }
+
+  function avgMix() {
+    var sum = {}, n = 0;
+    periods.forEach(function (p) { if (p.mix) { n++; for (var f in p.mix) sum[f] = (sum[f] || 0) + p.mix[f]; } });
+    for (var f in sum) sum[f] /= n;
+    return n ? sum : null;
+  }
+
+  // One short headline and two or three plain sentences: why the lights look the way they do.
+  function explain(now, m, avg, counts) {
+    var n = periods.length;
+    var ranked = BANDS.filter(function (b) { return counts[b]; }).sort(function (a, b) { return counts[b] - counts[a]; });
+    var top = ranked[0], second = ranked[1];
+    var headline;
+    var plain = function (b) { return COLOUR[b].replace(/^(dark|light) /, ""); };   // "green" reads better at a distance
+    if (counts[top] >= 0.85 * n || (second && plain(top) === plain(second) && counts[top] + counts[second] >= 0.85 * n))
+      headline = "Why are the lights " + plain(top) + "?";
+    else if (second && counts[top] + counts[second] >= 0.85 * n) headline = "Why are the lights " + plain(top) + " and " + plain(second) + "?";
+    else headline = "What are the lights showing?";
+
+    if (!m) return { headline: headline, why: "Britain's electricity is " + (now.index || "unrated") +
+      " carbon right now. The lights show the last 50 hours, from clean (green) to carbon-heavy (red)." };
+
+    var gas = m.gas || 0, wind = m.wind || 0, solar = m.solar || 0, nuclear = m.nuclear || 0;
+    var hour = londonHour(now.from), dark = solar < 0.5 && (hour < 8 || hour >= 16);
+    var dirty = now.index === "high" || now.index === "very high";
+    var clean = now.index === "low" || now.index === "very low";
+    // "gloom" needs the calm to have lasted, not just a still moment or a normal night
+    var gloom = avg && (avg.wind || 0) < 15 && (avg.solar || 0) < 6;
+    var s;
+    if (dirty) {
+      s = "Gas power stations are generating " + pct(gas) + " of Britain's electricity right now. ";
+      if (wind < 15) {
+        var sun = dark ? "no sun" : solar < 5 ? "hardly any sun" : null;
+        if (gloom) s += "There has been very little wind" + (sun ? " and " + (dark ? "little sun" : sun) : "") +
+          " for days — the still, grey weather forecasters call anticyclonic gloom — so gas is filling the gap.";
+        else s += "There is very little wind" + (sun ? " and " + sun : "") + ", so gas is filling the gap.";
+      } else {
+        s += "Wind is supplying " + pct(wind) + ", but demand is high enough that gas still has to cover the rest.";
+      }
+    } else if (clean) {
+      var parts = ["Wind is generating " + pct(wind)];
+      if (solar >= 5) parts.push("solar " + pct(solar));
+      if (nuclear >= 5) parts.push("nuclear " + pct(nuclear));
+      s = listJoin(parts) + " of Britain's electricity right now, so gas is down to " + pct(gas) + ". ";
+      s += wind >= 35 ? "Windy weather means clean power." : solar >= 20 ? "Bright skies mean clean power." : "Clean sources are doing most of the work.";
+    } else {
+      s = "Gas is generating " + pct(gas) + " of Britain's electricity right now and wind " + pct(wind) +
+          ". Neither is clearly in charge, so the grid is in between clean and carbon-heavy.";
+    }
+    if (dirty && hour >= 16 && hour < 20) s += " It is also the early-evening peak, when demand is highest.";
+    return { headline: headline, why: s };
+  }
+
+  // The string, drawn as swags of ten lights; two rows on a wide screen, more on a narrow one.
+  function drawString() {
+    var el_ = $("string"), w = el_.clientWidth || 1000;
+    var rows = w >= 900 ? 2 : w >= 520 ? 4 : 5;
+    var perRow = Math.ceil(periods.length / rows), swag = perRow % 10 === 0 ? 10 : 5;
+    var W = w >= 900 ? 1000 : w, pad = 14, step = (W - 2 * pad) / (perRow - 1);   // narrow screens draw at 1:1
+    var r = Math.min(step * 0.4, 9), rowH = r * 2 + 34, dip = Math.min(13, step * 0.7);
+    var H = rows * rowH + 6;
+    el_.setAttribute("viewBox", "0 0 " + W + " " + H);
+    var nodes = [], defs = svg("defs", {}), blur = svg("filter", { id: "glow", x: "-150%", y: "-150%", width: "400%", height: "400%" });
+    blur.append(svg("feGaussianBlur", { stdDeviation: r * 0.9 })); defs.append(blur); nodes.push(defs);
+    var lastDay = null;
+    periods.forEach(function (p, i) {
+      var row = Math.floor(i / perRow), col = i % perRow;
+      var x = pad + col * step, t = (col % swag) / (swag - 1);
+      var y = row * rowH + r + 6 + dip * Math.sin(Math.PI * t);
+      if (col === 0) {   // the wire for this row, hung in swags
+        var d = "", cols = Math.min(perRow, periods.length - i);
+        for (var c = 0; c < cols; c += 1) {
+          var tt = (c % swag) / (swag - 1);
+          d += (c ? "L" : "M") + (pad + c * step).toFixed(1) + " " + (row * rowH + r + 6 + dip * Math.sin(Math.PI * tt)).toFixed(1);
+        }
+        nodes.push(svg("path", { "class": "wire", d: d }));
+      }
+      var colour = cssVar(p.index), last = i === periods.length - 1;
+      var halo = svg("circle", { "class": "halo", cx: x, cy: y, r: r * 1.5, fill: colour, filter: "url(#glow)" });
+      halo.style.animationDelay = (-(i * 37 % 36) / 10) + "s";
+      nodes.push(halo);
+      if (last) nodes.push(svg("circle", { "class": "now-ring", cx: x, cy: y, r: r, fill: "none", stroke: "#F5F1E9", "stroke-width": 1.2 }));
+      var core = svg("circle", { "class": "core", cx: x, cy: y, r: last ? r * 1.15 : r, fill: colour });
+      var title = svg("title", {}); title.textContent = fDay.format(p.from) + " " + fTime.format(p.from) + ": " +
+        (p.index || "no rating") + (p.value != null ? ", " + p.value + " g CO₂/kWh" : "");
+      core.append(title); nodes.push(core);
+      var day = fDay.format(p.from);
+      if (lastDay !== null && day !== lastDay && col > 1 && col < perRow - 2) {   // mark midnight
+        var tick = svg("text", { "class": "tick", x: x, y: row * rowH + r * 2 + dip + 22, "text-anchor": "middle" });
+        tick.textContent = day; nodes.push(tick);
+      }
+      lastDay = day;
+    });
+    el_.replaceChildren.apply(el_, nodes);
+    var counts = {}; periods.forEach(function (p) { counts[p.index] = (counts[p.index] || 0) + 1; });
+    el_.setAttribute("aria-label", "The string of " + periods.length + " lights, oldest first: " +
+      listJoin(BANDS.filter(function (b) { return counts[b]; }).map(function (b) { return counts[b] + " " + COLOUR[b]; })));
+  }
+
+  function render() {
+    var now = periods[periods.length - 1];
+    var withMix = periods.filter(function (p) { return p.mix; });
+    var m = withMix.length ? withMix[withMix.length - 1].mix : null;
+    var counts = {}; periods.forEach(function (p) { counts[p.index] = (counts[p.index] || 0) + 1; });
+    var x = explain(now, m, avgMix(), counts);
+
+    $("headline").textContent = x.headline;
+    $("why").textContent = x.why;
+    $("bulb").style.setProperty("--c", cssVar(now.index));
+    $("value").textContent = now.value != null ? now.value : "–";
+    $("unit").textContent = "g CO₂ per kWh · " + (now.index || "no rating");
+    $("oldest").textContent = fDay.format(periods[0].from) + " " + fTime.format(periods[0].from);
+    $("newest").textContent = "Now";
+    $("updated").textContent = "updated " + fTime.format(new Date());
+    drawString();
+
+    var mix = $("mix");
+    if (m) {
+      mix.replaceChildren.apply(mix, Object.keys(m).sort(function (a, b) { return m[b] - m[a]; }).slice(0, 4).map(function (f) {
+        var d = el("div"); d.append(el("b", pct(m[f])), el("span", f)); return d;
+      }));
+    } else mix.replaceChildren(el("span", "Not available right now"));
+
+    $("legend").replaceChildren.apply($("legend"), BANDS.map(function (band) {
+      var li = el("li"), dot = el("i"); dot.style.setProperty("--c", cssVar(band));
+      li.append(dot, band.charAt(0).toUpperCase() + band.slice(1)); return li;
+    }));
+  }
+
+  var resize;
+  window.addEventListener("resize", function () { clearTimeout(resize); resize = setTimeout(function () { if (periods.length) drawString(); }, 150); });
+  load();
+})();
+</script>
+<noscript><p style="padding:16px">This page needs JavaScript to fetch the live grid data.</p></noscript>
+</body>
+</html>

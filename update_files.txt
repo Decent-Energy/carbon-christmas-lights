@@ -2,3 +2,5 @@
 # main.py, remote.py and config.py are never updated this way.
 lights.py
 test_leds.py
+web.py
+index.html

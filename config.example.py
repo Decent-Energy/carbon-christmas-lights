@@ -14,6 +14,10 @@ COLOUR_ORDER = "RGB" # this string is RGB; use "GRB" if test_leds.py shows red a
 
 HOSTNAME = "carbon-lights"   # the Pico answers to carbon-lights.local on most networks
 
+# Web page: the Pico serves index.html, which explains the lights, at
+# http://carbon-lights.local/ (or its IP address). Set to False to switch off.
+WEB_PAGE = True
+
 # WebREPL: push files to the Pico over the local network. 4 to 9 characters;
 # leave empty to keep it switched off.
 WEBREPL_PASSWORD = ""

@@ -21,6 +21,7 @@ except ImportError:  # older MicroPython builds
 
 import remote  # WiFi, WebREPL and updates from GitHub; also checks config.py exists
 import config
+import web     # serves index.html, the page that explains the lights
 
 PERIOD_S = 30 * 60          # the API reports in half-hour periods
 SCROLL_LOOPS = 4            # times the pattern runs round the string after an update
@@ -114,16 +115,21 @@ def animate(colours):
     for _ in range(SCROLL_LOOPS):
         for offset in range(len(strip)):
             show(colours, offset)
-            time.sleep(SCROLL_DELAY_S)
+            web.sleep(SCROLL_DELAY_S)
     show(colours)  # settle with the oldest period on the first LED
 
 
 def main():
     show([])  # clear whatever the string powered up showing
     last_ntp = None
+    serving = False
     while True:
         try:
             remote.connect_wifi()
+            if not serving and getattr(config, "WEB_PAGE", True):
+                serving = web.start(getattr(config, "WEB_PORT", 80))
+                if serving:
+                    print("Web page at http://%s/" % remote.wlan.ifconfig()[0])
             if last_ntp is None or time.time() - last_ntp > NTP_RESYNC_S:
                 ntptime.settime()  # sets the clock to UTC, which the API expects
                 last_ntp = time.time()
@@ -132,7 +138,7 @@ def main():
         except Exception as error:  # keep the current display and try again
             print("Update failed:", error)
             remote.status_led.off()
-            time.sleep(RETRY_DELAY_S)
+            web.sleep(RETRY_DELAY_S)
             continue
 
         remote.confirm()  # a full refresh worked, so keep any newly installed code
@@ -143,7 +149,7 @@ def main():
         now = time.time()
         wait = PERIOD_S - now % PERIOD_S + SETTLE_S
         print("Next update in", wait, "seconds")
-        time.sleep(wait)
+        web.sleep(wait)
 
 
 if __name__ == "__main__":
