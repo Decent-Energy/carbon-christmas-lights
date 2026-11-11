@@ -121,6 +121,11 @@ def fetch_colours():
         response.close()
     if not entries:
         raise RuntimeError("API returned no data")
+    counts = {}
+    for entry in entries[-config.LED_COUNT:]:
+        index = (entry.get("intensity") or {}).get("index")
+        counts[index] = counts.get(index, 0) + 1
+    print("Periods by index:", counts)
     colours = colours_from_entries(entries, config.LED_COUNT, config.BRIGHTNESS)
     del entries
     gc.collect()
