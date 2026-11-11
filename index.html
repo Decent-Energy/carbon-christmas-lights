@@ -75,6 +75,28 @@
     padding-top: clamp(10px, 1.6vh, 18px); border-top: 1px solid rgba(245, 241, 233, .14); }
   footer a { color: inherit; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
 
+  /* a portrait screen, such as a foyer display turned on its side */
+  @media (orientation: portrait) and (min-width: 761px) {
+    main { --u: min(1vw, 0.5625vh);   /* one unit: 1% of the width of a 9:16 screen */
+      padding: 3.4vh 7vw; gap: 2.3vh; grid-template-rows: auto auto 1fr auto auto; }
+    .eyebrow { font-size: calc(var(--u) * 2); }
+    .meta { font-size: calc(var(--u) * 1.9); }
+    .hero { grid-template-columns: 1fr; gap: 2.4vh; }
+    .reading { order: -1; display: flex; align-items: center; gap: calc(var(--u) * 5); text-align: left; }
+    .bulb { width: calc(var(--u) * 19); margin: 0 0 0 calc(var(--u) * 2); flex: none;
+      box-shadow: 0 0 calc(var(--u) * 10) calc(var(--u) * 2) var(--c, transparent); }
+    .stat { font-size: calc(var(--u) * 13); }
+    .stat small { font-size: calc(var(--u) * 2); margin-top: 1vh; }
+    h1 { font-size: calc(var(--u) * 8.3); margin-bottom: 1.8vh; }
+    #why { font-size: calc(var(--u) * 3.15); max-width: none; }
+    .bottom { grid-template-columns: 1fr; gap: 2.2vh; align-items: start; }
+    .mix { gap: calc(var(--u) * 6); margin-top: 1vh; }
+    .mix b { font-size: calc(var(--u) * 5.8); }
+    .mix span { font-size: calc(var(--u) * 1.9); }
+    .legend { gap: calc(var(--u) * 3.4); margin-top: 1vh; }
+    .legend li { font-size: calc(var(--u) * 2.2); }
+  }
+
   @media (max-width: 760px) {
     .hero { grid-template-columns: 1fr; }
     .reading { display: flex; align-items: center; gap: 18px; text-align: left; order: -1; }
@@ -240,10 +262,12 @@
   // The string, drawn as swags of ten lights; two rows on a wide screen, more on a narrow one.
   function drawString() {
     var el_ = $("string"), w = el_.clientWidth || 1000;
-    var rows = w >= 900 ? 2 : w >= 520 ? 4 : 5;
+    var tall = window.innerHeight > window.innerWidth;
+    var rows = tall ? 5 : w >= 900 ? 2 : 4;
     var perRow = Math.ceil(periods.length / rows), swag = perRow % 10 === 0 ? 10 : 5;
     var W = w >= 900 ? 1000 : w, pad = 14, step = (W - 2 * pad) / (perRow - 1);   // narrow screens draw at 1:1
-    var r = Math.min(step * 0.4, 9), rowH = r * 2 + 34, dip = Math.min(13, step * 0.7);
+    var big = tall && W === 1000;   // a large portrait screen: bigger bulbs, deeper swags
+    var r = Math.min(step * 0.4, big ? 15 : 9), dip = Math.min(big ? 22 : 13, step * 0.7), rowH = r * 2 + (big ? 56 : 34);
     var H = rows * rowH + 6;
     el_.setAttribute("viewBox", "0 0 " + W + " " + H);
     var nodes = [], defs = svg("defs", {}), blur = svg("filter", { id: "glow", x: "-150%", y: "-150%", width: "400%", height: "400%" });
@@ -272,7 +296,8 @@
       core.append(title); nodes.push(core);
       var day = fDay.format(p.from);
       if (lastDay !== null && day !== lastDay && col > 1 && col < perRow - 2) {   // mark midnight
-        var tick = svg("text", { "class": "tick", x: x, y: row * rowH + r * 2 + dip + 22, "text-anchor": "middle" });
+        var tick = svg("text", { "class": "tick", x: x, y: row * rowH + r * 2 + dip + (big ? 34 : 22), "text-anchor": "middle" });
+        if (big) tick.style.fontSize = "17px";
         tick.textContent = day; nodes.push(tick);
       }
       lastDay = day;
