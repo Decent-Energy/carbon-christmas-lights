@@ -29,6 +29,7 @@ SCROLL_DELAY_S = 0.3        # pause between scroll steps
 RETRY_DELAY_S = 60          # wait after a failed update
 SETTLE_S = 90               # wait after a period starts before asking for it
 NTP_RESYNC_S = 12 * 60 * 60
+REWRITE_S = 5              # resend the held colours this often (see hold)
 
 # Colours as (red, green, blue) at full brightness, by API index.
 INDEX_COLOURS = {
@@ -171,6 +172,19 @@ def fetch_colours():
     return colours
 
 
+def hold(seconds):
+    """Keep the current colours on the string for `seconds`, resending them
+    every REWRITE_S. The LEDs go dark if their 5 V supply dips, as it can on a
+    computer's USB port, and only light again when they get fresh data."""
+    deadline = time.ticks_add(time.ticks_ms(), int(seconds * 1000))
+    while True:
+        remaining = time.ticks_diff(deadline, time.ticks_ms())
+        if remaining <= 0:
+            return
+        web.sleep(min(remaining, REWRITE_S * 1000) / 1000)
+        strip.write()
+
+
 def animate(colours):
     for _ in range(SCROLL_LOOPS):
         for offset in range(len(strip)):
@@ -198,7 +212,7 @@ def main():
         except Exception as error:  # keep the current display and try again
             print("Update failed:", error)
             remote.status_led.off()
-            web.sleep(RETRY_DELAY_S)
+            hold(RETRY_DELAY_S)
             continue
 
         remote.confirm()  # a full refresh worked, so keep any newly installed code
@@ -209,7 +223,7 @@ def main():
         now = time.time()
         wait = PERIOD_S - now % PERIOD_S + SETTLE_S
         print("Next update in", wait, "seconds")
-        web.sleep(wait)
+        hold(wait)
 
 
 if __name__ == "__main__":
