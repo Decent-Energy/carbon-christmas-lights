@@ -73,10 +73,52 @@ def colours_from_entries(entries, count, brightness):
 
 # --- hardware ---------------------------------------------------------------
 
-if getattr(config, "COLOUR_ORDER", "GRB") == "RGB":
-    neopixel.NeoPixel.ORDER = (0, 1, 2, 3)
+try:
+    import plasma  # Pimoroni firmware only
+except ImportError:
+    plasma = None
 
-strip = neopixel.NeoPixel(machine.Pin(config.LED_PIN), config.LED_COUNT)
+
+class PlasmaStrip:
+    """Pimoroni's plasma.WS2812 driver behind the neopixel interface.
+
+    On the Plasma 2350 W the neopixel module's signal does not reach the
+    string (it stays white), but Pimoroni's PIO driver works. Colours are
+    held here and sent to the string in one go on write().
+    """
+
+    def __init__(self, pin, count, order):
+        orders = {"RGB": plasma.COLOR_ORDER_RGB, "GRB": plasma.COLOR_ORDER_GRB}
+        self._leds = plasma.WS2812(count, dat=pin, color_order=orders.get(order, plasma.COLOR_ORDER_GRB))
+        self._buf = [OFF] * count
+
+    def __len__(self):
+        return len(self._buf)
+
+    def __setitem__(self, i, colour):
+        self._buf[i] = colour
+
+    def __getitem__(self, i):
+        return self._buf[i]
+
+    def fill(self, colour):
+        for i in range(len(self._buf)):
+            self._buf[i] = colour
+
+    def write(self):
+        for i, (r, g, b) in enumerate(self._buf):
+            self._leds.set_rgb(i, r, g, b)
+        self._leds.update()
+
+
+COLOUR_ORDER = getattr(config, "COLOUR_ORDER", "GRB")
+
+if plasma:
+    strip = PlasmaStrip(config.LED_PIN, config.LED_COUNT, COLOUR_ORDER)
+else:
+    if COLOUR_ORDER == "RGB":
+        neopixel.NeoPixel.ORDER = (0, 1, 2, 3)
+    strip = neopixel.NeoPixel(machine.Pin(config.LED_PIN), config.LED_COUNT)
 
 
 def show(colours, offset=0):
