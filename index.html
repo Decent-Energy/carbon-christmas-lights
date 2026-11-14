@@ -19,13 +19,15 @@
     /* the five light colours, matched to the LEDs on the string */
     --very-low: #2a9a45; --low: #93dd3c; --moderate: #ffd21f; --high: #ff9124; --very-high: #f4433a;
     --unknown: #2b5873;
+    /* energy sources, coloured by kind (checked for colour-blind separation on this background) */
+    --fossil: #D0703A; --other: #9884D0; --clean: #62A552;
   }
   * { box-sizing: border-box; }
   html { background: #07435e; }
   body { margin: 0; color: var(--de-cream); font: 400 16px/1.5 var(--font-body);
     background: linear-gradient(180deg, var(--de-blue-900), #07435e) fixed; }
-  main { min-height: 100vh; max-width: 1800px; margin: 0 auto; padding: clamp(16px, 3.6vh, 56px) clamp(18px, 5vw, 96px);
-    display: grid; grid-template-rows: auto auto 1fr auto auto; gap: clamp(10px, 2.2vh, 36px); }
+  main { min-height: 100vh; max-width: 1800px; margin: 0 auto; padding: clamp(12px, 2.8vh, 56px) clamp(18px, 5vw, 96px);
+    display: grid; grid-template-rows: auto auto 1fr auto auto; gap: clamp(8px, 1.7vh, 32px); }
   p { margin: 0; }
   .eyebrow { font: 600 clamp(.8rem, 1.05vw, 1.25rem)/1.2 var(--font-ui); text-transform: uppercase;
     letter-spacing: .18em; color: var(--de-green-500); }
@@ -34,15 +36,15 @@
   header { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
 
   .hero { display: grid; grid-template-columns: 1fr auto; gap: clamp(20px, 5vw, 96px); align-items: center; }
-  h1 { font: 800 clamp(2rem, min(5.6vw, 9.6vh), 6.2rem)/1.03 var(--font-display); text-transform: uppercase; letter-spacing: .03em;
+  h1 { font: 800 clamp(2rem, min(5.6vw, 8.6vh), 6.2rem)/1.03 var(--font-display); text-transform: uppercase; letter-spacing: .03em;
     margin: 0 0 clamp(12px, 2.2vh, 28px); text-wrap: balance; }
-  #why { font-size: clamp(1.05rem, min(1.75vw, 3vh), 2.05rem); line-height: 1.42; max-width: 50ch; text-wrap: pretty; }
+  #why { font-size: clamp(1.05rem, min(1.75vw, 2.75vh), 2.05rem); line-height: 1.42; max-width: 50ch; text-wrap: pretty; }
   .reading { text-align: center; }
-  .bulb { width: clamp(88px, min(11vw, 19vh), 200px); aspect-ratio: 1; border-radius: 50%; margin: 0 auto clamp(14px, 2.4vh, 28px);
+  .bulb { width: clamp(88px, min(11vw, 16vh), 200px); aspect-ratio: 1; border-radius: 50%; margin: 0 auto clamp(14px, 2.4vh, 28px);
     background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.55), transparent 42%), var(--c, var(--unknown));
     box-shadow: 0 0 clamp(40px, 6vw, 110px) clamp(6px, 1.2vw, 22px) var(--c, transparent);
     transition: background-color 420ms, box-shadow 420ms; }
-  .stat { font: 800 clamp(2.6rem, min(5.4vw, 9vh), 5.6rem)/1 var(--font-display); letter-spacing: -.01em; }
+  .stat { font: 800 clamp(2.6rem, min(5.4vw, 8vh), 5.6rem)/1 var(--font-display); letter-spacing: -.01em; }
   .stat small { display: block; margin-top: 8px; font: 600 clamp(.8rem, 1.05vw, 1.25rem)/1.3 var(--font-ui);
     letter-spacing: .18em; text-transform: uppercase; color: var(--de-blue-300); }
 
@@ -64,9 +66,17 @@
 
   .bottom { display: grid; grid-template-columns: 1fr auto; gap: clamp(20px, 4vw, 72px); align-items: end; }
   .mix { display: flex; gap: clamp(18px, 3.2vw, 64px); flex-wrap: wrap; margin-top: 10px; }
-  .mix b { display: block; font: 800 clamp(1.7rem, min(3vw, 5.4vh), 3.4rem)/1 var(--font-display); }
+  .mix b { display: block; font: 800 clamp(1.6rem, min(2.6vw, 4.4vh), 3.4rem)/1 var(--font-display); }
   .mix span { font: 600 clamp(.78rem, .95vw, 1.1rem)/1.3 var(--font-ui); letter-spacing: .18em; text-transform: uppercase;
     color: var(--de-blue-300); }
+  .mix i { display: inline-block; width: .7em; height: .7em; border-radius: 2px; background: var(--c); margin-right: .5em; }
+  .mixbar { display: flex; gap: 2px; height: clamp(24px, 3.8vh, 52px); margin-top: clamp(8px, 1.3vh, 18px); }
+  .mixbar div { background: var(--c); min-width: 3px; overflow: hidden; display: flex; align-items: center;
+    transition: flex-basis 420ms cubic-bezier(0.22, 0.61, 0.36, 1); }
+  .mixbar div:first-child { border-radius: 4px 0 0 4px; } .mixbar div:last-child { border-radius: 0 4px 4px 0; }
+  .mixbar span { padding: 0 .7em; white-space: nowrap; color: var(--de-blue-900);
+    font: 600 clamp(.8rem, 1.05vw, 1.25rem)/1 var(--font-ui); letter-spacing: .06em; text-transform: uppercase; }
+  .mixkey { margin-top: clamp(6px, 1vh, 12px); }
   .legend { display: flex; gap: clamp(12px, 1.6vw, 28px); flex-wrap: wrap; list-style: none; padding: 0; margin: 10px 0 0; }
   .legend li { font: 500 clamp(.85rem, 1vw, 1.15rem)/1.3 var(--font-ui); letter-spacing: .04em; white-space: nowrap; }
   .legend i { display: inline-block; width: .8em; height: .8em; border-radius: 50%; background: var(--c);
@@ -79,21 +89,23 @@
   /* a portrait screen, such as a foyer display turned on its side */
   @media (orientation: portrait) and (min-width: 761px) {
     main { --u: min(1vw, 0.5625vh);   /* one unit: 1% of the width of a 9:16 screen */
-      padding: 3.2vh 7vw; gap: 2vh; grid-template-rows: auto auto 1fr auto auto; }
+      padding: 2.8vh 7vw; gap: 1.4vh; grid-template-rows: auto auto 1fr auto auto; }
     .eyebrow { font-size: calc(var(--u) * 2); }
     .meta { font-size: calc(var(--u) * 1.9); }
     .hero { grid-template-columns: 1fr; gap: 2.4vh; }
     .reading { order: -1; display: flex; align-items: center; gap: calc(var(--u) * 5); text-align: left; }
-    .bulb { width: calc(var(--u) * 19); margin: 0 0 0 calc(var(--u) * 2); flex: none;
+    .bulb { width: calc(var(--u) * 16.5); margin: 0 0 0 calc(var(--u) * 2); flex: none;
       box-shadow: 0 0 calc(var(--u) * 10) calc(var(--u) * 2) var(--c, transparent); }
-    .stat { font-size: calc(var(--u) * 13); }
+    .stat { font-size: calc(var(--u) * 12); }
     .stat small { font-size: calc(var(--u) * 2); margin-top: 1vh; }
     h1 { font-size: calc(var(--u) * 8.3); margin-bottom: 1.8vh; }
     #why { font-size: calc(var(--u) * 3.15); max-width: none; }
-    .bottom { grid-template-columns: 1fr; gap: 2.2vh; align-items: start; }
+    .bottom { grid-template-columns: 1fr; gap: 1.8vh; align-items: start; }
     .mix { gap: calc(var(--u) * 6); margin-top: 1vh; }
-    .mix b { font-size: calc(var(--u) * 5.8); }
+    .mix b { font-size: calc(var(--u) * 5); }
     .mix span { font-size: calc(var(--u) * 1.9); }
+    .mixbar { height: calc(var(--u) * 4.2); }
+    .mixbar span { font-size: calc(var(--u) * 1.9); }
     .legend { gap: calc(var(--u) * 3.4); margin-top: 1vh; }
     .legend li { font-size: calc(var(--u) * 2.2); }
   }
@@ -134,6 +146,8 @@
     <div>
       <p class="eyebrow">Where the power is coming from</p>
       <div class="mix" id="mix"></div>
+      <div class="mixbar" id="mixbar" role="img"></div>
+      <p class="mixkey meta" id="mixkey"></p>
     </div>
     <div>
       <p class="eyebrow">Carbon in the electricity</p>
@@ -154,6 +168,12 @@
   var COUNT = 100, PERIOD = 30 * 60 * 1000, SVGNS = "http://www.w3.org/2000/svg";
   var BANDS = ["very low", "low", "moderate", "high", "very high"];
   var COLOUR = { "very low": "dark green", "low": "light green", "moderate": "yellow", "high": "amber", "very high": "red" };
+  // Sources grouped by kind, dirtiest first; the bar and the three big numbers follow this order.
+  var GROUPS = [
+    { name: "Fossil fuels", colour: "var(--fossil)", fuels: ["gas", "coal"] },
+    { name: "Imports & biomass", colour: "var(--other)", fuels: ["imports", "biomass", "other"] },
+    { name: "Low carbon", colour: "var(--clean)", fuels: ["nuclear", "hydro", "wind", "solar"] }
+  ];
   var $ = function (id) { return document.getElementById(id); };
   var periods = [], timer = null;
 
@@ -269,7 +289,7 @@
     var perRow = Math.ceil(periods.length / rows), swag = perRow % 10 === 0 ? 10 : 5;
     var W = w >= 900 ? 1000 : w, pad = 14, step = (W - 2 * pad) / (perRow - 1);   // narrow screens draw at 1:1
     var big = tall && W === 1000;   // a large portrait screen: bigger bulbs, deeper swags
-    var r = Math.min(step * 0.4, big ? 15 : 9), dip = Math.min(big ? 22 : 13, step * 0.7), rowH = r * 2 + (big ? 50 : 34);
+    var r = Math.min(step * 0.4, big ? 15 : 9), dip = Math.min(big ? 22 : 13, step * 0.7), rowH = r * 2 + (big ? 46 : 34);
     var H = rows * rowH + 6;
     el_.setAttribute("viewBox", "0 0 " + W + " " + H);
     var nodes = [], defs = svg("defs", {}), blur = svg("filter", { id: "glow", x: "-150%", y: "-150%", width: "400%", height: "400%" });
@@ -327,12 +347,38 @@
     $("updated").textContent = "updated " + fTime.format(new Date());
     drawString();
 
-    var mix = $("mix");
+    var mix = $("mix"), bar = $("mixbar"), key = $("mixkey");
     if (m) {
-      mix.replaceChildren.apply(mix, Object.keys(m).sort(function (a, b) { return m[b] - m[a]; }).slice(0, 4).map(function (f) {
-        var d = el("div"); d.append(el("b", pct(m[f])), el("span", f)); return d;
-      }));
-    } else mix.replaceChildren(el("span", "Not available right now"));
+      var known = [].concat.apply([], GROUPS.map(function (g) { return g.fuels; }));
+      var stats = [], segments = [], names = [];
+      GROUPS.forEach(function (g, gi) {
+        var fuels = Object.keys(m).filter(function (f) { return g.fuels.indexOf(f) >= 0 || (gi === 1 && known.indexOf(f) < 0); })
+          .sort(function (a, b) { return m[b] - m[a]; });
+        var total = fuels.reduce(function (sum, f) { return sum + m[f]; }, 0);
+        var stat = el("div"), label = el("span"), dot = el("i");
+        dot.style.setProperty("--c", g.colour);
+        label.append(dot, g.name);
+        stat.append(el("b", pct(total)), label);
+        stats.push(stat);
+        fuels.forEach(function (f) {
+          if (m[f] < 0.5) return;
+          var seg = el("div"), name = f.charAt(0).toUpperCase() + f.slice(1);
+          seg.style.setProperty("--c", g.colour);
+          seg.style.flex = "0 1 " + m[f] + "%";
+          seg.title = name + " " + pct(m[f]);
+          if (m[f] >= 16) seg.append(el("span", name + " " + pct(m[f])));   // label the segments wide enough to hold one
+          segments.push(seg);
+          names.push(name + " " + pct(m[f]));
+        });
+      });
+      mix.replaceChildren.apply(mix, stats);
+      bar.replaceChildren.apply(bar, segments);
+      bar.setAttribute("aria-label", "Share of electricity by source: " + names.join(", "));
+      key.textContent = "Left to right: " + names.join(" · ");
+    } else {
+      mix.replaceChildren(el("span", "Not available right now"));
+      bar.replaceChildren(); key.textContent = "";
+    }
 
     $("legend").replaceChildren.apply($("legend"), BANDS.map(function (band) {
       var li = el("li"), dot = el("i"); dot.style.setProperty("--c", cssVar(band));
