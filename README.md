@@ -159,6 +159,30 @@ without them.
 - After switching the supply off, wait about 30 seconds before switching it
   back on.
 
+## Using a Pimoroni Plasma 2350 W instead
+
+The [Plasma 2350 W](https://shop.pimoroni.com/products/plasma-2350-w) is the
+same chip and WiFi as a Pico 2 W on a board made for LED strings: USB-C in,
+screw terminals out. It needs no separate supply, capacitor wiring or VSYS
+link, and the same code runs on it.
+
+- **Power:** one USB-C charger rated 5 V 3 A powers the board and the string.
+  3 A covers these lights up to a `BRIGHTNESS` of about 0.85.
+- **Wiring:** the string's 5 V, data and ground wires go to the matching
+  screw terminals. The clock terminal stays empty.
+- **Firmware:** use Pimoroni's build, not the Pico 2 W one. Download
+  `plasma_2350_w-v…-micropython.uf2` from the
+  [Plasma releases page](https://github.com/pimoroni/plasma/releases). Hold
+  the BOOT button while plugging in USB, then drag the file onto the
+  `RP2350` drive. The version without "with-filesystem" in its name is the
+  one to use.
+- **Config:** set `LED_PIN = 15` in `config.py`. Everything else is the
+  same as for the Pico.
+- **Status light:** the green part of the board's colour LED behaves like
+  the Pico's light. The code detects the board and handles it.
+
+Then follow the Setup steps below from step 2.
+
 ## Setup
 
 1. Flash the [MicroPython firmware for the Pico 2 W](https://micropython.org/download/RPI_PICO2_W/).

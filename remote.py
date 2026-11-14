@@ -45,7 +45,46 @@ BAD_FILE = "bad_version.txt"            # commit that was rolled back
 MAX_STARTS = 3                          # unconfirmed starts before rolling back
 RECOVERY_CHECK_S = 30 * 60
 
-status_led = machine.Pin("LED", machine.Pin.OUT)
+
+
+class StatusLed:
+    """The board's small status light.
+
+    On a Pico the pin is driven high to light it. On a Pimoroni Plasma 2350 W
+    the light is the green part of its colour LED, which lights when the pin
+    is driven low.
+    """
+
+    def __init__(self, pin, inverted):
+        self._pin = machine.Pin(pin, machine.Pin.OUT)
+        self._inverted = inverted
+        self.off()
+
+    def _set(self, lit):
+        self._lit = lit
+        self._pin.value(1 if lit != self._inverted else 0)
+
+    def on(self):
+        self._set(True)
+
+    def off(self):
+        self._set(False)
+
+    def toggle(self):
+        self._set(not self._lit)
+
+
+def _board_name():
+    try:
+        return os.uname().machine
+    except Exception:
+        return ""
+
+
+IS_PLASMA = "Plasma" in _board_name()
+
+status_led = StatusLed(getattr(config, "STATUS_LED_PIN", "LED"),
+                       getattr(config, "STATUS_LED_INVERTED", IS_PLASMA))
 wlan = network.WLAN(network.STA_IF)
 
 try:

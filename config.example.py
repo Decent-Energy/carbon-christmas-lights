@@ -1,18 +1,21 @@
-# Copy this file to config.py, fill it in, and copy config.py to the Pico.
+# Copy this file to config.py, fill it in, and copy config.py to the board.
 # config.py is git-ignored so the WiFi password stays out of the repo.
 
 WIFI_SSID = "your-network-name"
 WIFI_PASSWORD = "your-wifi-password"
 WIFI_COUNTRY = "GB"
 
-LED_PIN = 0          # GP0 (physical pin 1) -> string data wire
+LED_PIN = 0          # Pico 2 W: GP0 (physical pin 1) -> string data wire
+                     # Plasma 2350 W: use 15, the pin behind its data terminal
 LED_COUNT = 100      # LEDs on the string, one per half-hour period
 BRIGHTNESS = 0.5     # 0.0 to 1.0; lower it if the far end of the string dims
 COLOUR_ORDER = "RGB" # this string is RGB; use "GRB" if test_leds.py shows red and green swapped
 
 # --- Remote access and updates (both optional) ---
 
-HOSTNAME = "carbon-lights"   # the Pico answers to carbon-lights.local on most networks
+# The board answers to this name plus .local on most networks. Give each board
+# its own name if you run more than one.
+HOSTNAME = "carbon-lights"
 
 # Web page: the Pico serves index.html, which explains the lights, at
 # http://carbon-lights.local/ (or its IP address). Set to False to switch off.
