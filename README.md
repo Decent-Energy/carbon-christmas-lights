@@ -156,8 +156,8 @@ before connecting; colours vary between makers.
 
 - If the far end of the string dims or changes colour, lower `BRIGHTNESS`.
 - Plugging the board into a computer powers the string from that computer's
-  USB port, which is fine for testing at the default brightness on most
-  ports, but use the charger for normal running.
+  USB port, which may supply well under 1 A. For testing that way, lower
+  `BRIGHTNESS` to about 0.2; use the charger for normal running.
 
 ## Setup
 
