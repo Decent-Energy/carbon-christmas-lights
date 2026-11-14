@@ -117,9 +117,9 @@ from how much the turbines and panels are producing.
 
 Three ways to show it:
 
-- **From the Pico:** browse to `http://carbon-lights.local/`, or to the IP
-  address the Pico prints at start-up. The viewing device must be on the
-  same network as the Pico and have internet access.
+- **From the board:** browse to `http://carbon-plasma.local/`, or to the IP
+  address the board prints at start-up. The viewing device must be on the
+  same network as the board and have internet access.
 - **From a file:** open `index.html` in a browser. Nothing else is needed.
 - **From a web host:** it is one self-contained file, so any static host
   works, including GitHub Pages.
@@ -129,58 +129,64 @@ without them.
 
 ## Hardware
 
-- Raspberry Pi Pico 2 W
-- BTF-LIGHTING WS2812B fairy string: 100 LEDs, 10 m, 5 V, IP65
-- 5 V power supply. At the default half brightness the string draws under
-  2 A, and no more than about 6 A at full-brightness white, so a 5 V 4 A
-  supply is enough for normal use.
-- 1000 µF 10 V electrolytic capacitor
-- Recommended: 330 Ω resistor for the data line
+This branch (`plasma-2350`) is for the Pimoroni Plasma 2350 W. The
+Raspberry Pi Pico 2 W version, with its separate power wiring, is on the
+other branch.
+
+- [Pimoroni Plasma 2350 W](https://shop.pimoroni.com/products/plasma-2350-w):
+  the same RP2350 chip and WiFi as a Pico 2 W, with a USB-C socket and screw
+  terminals for the LED string
+- A 5 V WS2812B fairy string: 100 LEDs, 10 m
+- A USB-C charger rated 5 V 3 A, and a USB-C cable
+
+One USB-C cable powers the board and the string. The board's USB-C input is
+limited to 3 A, which covers these lights up to a `BRIGHTNESS` of about
+0.85. At the default 0.5 the string draws under 2 A.
 
 ## Wiring
 
-| From | To |
+| String wire | Board screw terminal |
 |---|---|
-| Supply V+ (5 V) | String 5 V, and Pico VSYS (pin 39) |
-| Supply V− | String GND, and Pico GND (pin 38) |
-| Pico GP0 (pin 1) | String data in, through the 330 Ω resistor |
-| Capacitor | Across 5 V and GND at the start of the string, stripe to GND |
+| 5 V | `5V` |
+| Data | `DA` (GP15) |
+| Ground | `-` |
 
-- Don't plug in USB while the Pico is powered from the supply through VSYS,
-  unless there is a diode between the supply and VSYS.
-- The Pico's 3.3 V data signal is slightly below what 5 V WS2812Bs ask for.
-  Keep the data wire short; if the string flickers, add a 74AHCT125 level
-  shifter.
-- A supply with exposed mains terminals must be fitted in an enclosure with
-  a fused mains lead. For a public space, a sealed plug-in 5 V adapter is
-  the safer choice.
-- If the far end of the string dims or changes colour, lower `BRIGHTNESS` or
-  feed 5 V into both ends.
-- After switching the supply off, wait about 30 seconds before switching it
-  back on.
+The `CL` terminal is not used. Check which wire is which on your string
+before connecting; colours vary between makers.
+
+- If the far end of the string dims or changes colour, lower `BRIGHTNESS`.
+- Plugging the board into a computer powers the string from that computer's
+  USB port, which is fine for testing at the default brightness on most
+  ports, but use the charger for normal running.
 
 ## Setup
 
-1. Flash the [MicroPython firmware for the Pico 2 W](https://micropython.org/download/RPI_PICO2_W/).
-2. Copy `config.example.py` to `config.py` and set the WiFi name and password.
-3. Copy the code, the page and your config to the Pico, with Thonny or:
+1. Put the board in bootloader mode: hold **BOOT** and tap **RST**. A drive
+   called `RP2350` appears.
+2. Download the latest Plasma 2350 W firmware from
+   <https://github.com/pimoroni/plasma/releases/latest>. Take the file whose
+   name starts `plasma_2350_w` and does **not** end `-with-filesystem`, and
+   drag it onto the drive.
+3. Copy `config.example.py` to `config.py` and set the WiFi name and password.
+4. Copy the code, the page and your config to the board, with Thonny or:
 
    ```bash
    mpremote cp main.py remote.py lights.py web.py index.html test_leds.py wifi_test.py config.py :
    ```
 
-4. Check the wiring and colours: `mpremote run test_leds.py` wipes the string
+5. Check the wiring and colours: `mpremote run test_leds.py` wipes the string
    red, green, blue, then shows each carbon intensity colour in turn and all
    of them side by side. If red and green are swapped, change `COLOUR_ORDER`
    in `config.py` between `"RGB"` and `"GRB"`.
-5. Reset the Pico (`mpremote reset`). `main.py` starts on its own at power-up.
+6. Reset the board (`mpremote reset`, or tap **RST**). `main.py` starts on its
+   own at power-up.
 
-The onboard LED blinks while joining WiFi, stays on while updates succeed,
-and goes off if an update fails (it retries every minute). If it never
-connects, `mpremote run wifi_test.py` shows whether the network is in range
-and where joining fails.
+The board's small status light shows green: blinking while joining WiFi,
+steady while updates succeed, and off if an update fails (it retries every
+minute). If it never connects, `mpremote run wifi_test.py` shows whether the
+network is in range and where joining fails.
 
-The Pico joins 2.4 GHz networks that use a shared password (WPA2 or WPA3
+The board joins 2.4 GHz networks that use a shared password (WPA2 or WPA3
 Personal). It cannot join networks that need a username as well as a
 password, such as eduroam, or ones with a sign-in web page.
 
@@ -209,16 +215,16 @@ downloads the files listed in `update_files.txt` and restarts.
 
 Set `WEBREPL_PASSWORD` (4 to 9 characters). The Pico then accepts file
 uploads and a remote prompt from computers on the same network, at
-`carbon-lights.local` or the IP address it prints at start-up.
+`carbon-plasma.local` or the IP address it prints at start-up.
 
 Get `webrepl_cli.py` from <https://github.com/micropython/webrepl>, then:
 
 ```bash
-python webrepl_cli.py -p YOUR_PASSWORD lights.py carbon-lights.local:/lights.py
+python webrepl_cli.py -p YOUR_PASSWORD lights.py carbon-plasma.local:/lights.py
 ```
 
 Restart the Pico to run the new file: open the prompt with
-`python webrepl_cli.py -p YOUR_PASSWORD carbon-lights.local`, press Ctrl-C,
+`python webrepl_cli.py -p YOUR_PASSWORD carbon-plasma.local`, press Ctrl-C,
 then enter `import machine; machine.reset()`.
 
 WebREPL is unencrypted and guarded only by that password, so use it on a

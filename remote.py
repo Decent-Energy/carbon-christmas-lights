@@ -1,4 +1,7 @@
-"""WiFi, remote access and self-updating for the Pico 2 W (MicroPython).
+"""WiFi, remote access and self-updating (MicroPython).
+
+Runs on a Raspberry Pi Pico 2 W and on a Pimoroni Plasma 2350 W; the only
+difference handled here is the status light.
 
 main.py calls launch(), which:
 
@@ -45,7 +48,33 @@ BAD_FILE = "bad_version.txt"            # commit that was rolled back
 MAX_STARTS = 3                          # unconfirmed starts before rolling back
 RECOVERY_CHECK_S = 30 * 60
 
-status_led = machine.Pin("LED", machine.Pin.OUT)
+# The Plasma's "LED" pin is the green part of its colour LED, which lights when
+# the pin is low; the Pico's LED lights when its pin is high.
+PLASMA = "Plasma" in os.uname().machine
+
+
+class StatusLED:
+    def __init__(self, inverted):
+        self._inverted = inverted
+        self._lit = False
+        self._pin = machine.Pin("LED", machine.Pin.OUT)
+        self.off()
+
+    def _set(self, lit):
+        self._lit = lit
+        self._pin.value(1 if lit != self._inverted else 0)
+
+    def on(self):
+        self._set(True)
+
+    def off(self):
+        self._set(False)
+
+    def toggle(self):
+        self._set(not self._lit)
+
+
+status_led = StatusLED(getattr(config, "STATUS_LED_INVERTED", PLASMA))
 wlan = network.WLAN(network.STA_IF)
 
 try:
