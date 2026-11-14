@@ -9,6 +9,7 @@ WIFI_COUNTRY = "GB"
 LED_PIN = 15         # GP15: the board's DA screw terminal -> string data wire
 LED_COUNT = 100      # LEDs on the string, one per half-hour period
 BRIGHTNESS = 0.5     # 0.0 to 0.85; the board's USB-C input is limited to 3 A
+USB_BRIGHTNESS = 0.2 # used instead while a computer, not a charger, is on the USB port
 COLOUR_ORDER = "RGB" # this string is RGB; use "GRB" if test_leds.py shows red and green swapped
 
 # --- Remote access and updates (both optional) ---

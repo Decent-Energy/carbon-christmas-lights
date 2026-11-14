@@ -12,7 +12,7 @@ from them; copy lights.py again after changing a colour.
 import time
 
 import config
-from lights import INDEX_COLOURS, OFF, scale, show, strip
+from lights import INDEX_COLOURS, OFF, brightness, scale, show, strip
 
 # MicroPython dictionaries don't keep their order, so spell it out here.
 BANDS = ("very low", "low", "moderate", "high", "very high")
@@ -21,7 +21,8 @@ FILL_HOLD_S = 3      # time on each full-string colour
 BLOCKS_HOLD_S = 20   # time on the side-by-side view
 
 n = len(strip)
-level = int(255 * config.BRIGHTNESS)
+BRIGHTNESS = brightness()
+level = int(255 * BRIGHTNESS)
 
 
 def wipe(colour, wait_ms=10):
@@ -39,14 +40,14 @@ for name, colour in (("red", (level, 0, 0)), ("green", (0, level, 0)), ("blue", 
 
 print("Carbon intensity colours, one at a time")
 for band in BANDS:
-    colour = scale(INDEX_COLOURS[band], config.BRIGHTNESS)
+    colour = scale(INDEX_COLOURS[band], BRIGHTNESS)
     print("  %-9s %s" % (band, colour))
     strip.fill(colour)
     strip.write()
     time.sleep(FILL_HOLD_S)
 
 print("All colours side by side, very low first, for", BLOCKS_HOLD_S, "seconds")
-show([scale(INDEX_COLOURS[BANDS[i * len(BANDS) // n]], config.BRIGHTNESS) for i in range(n)])
+show([scale(INDEX_COLOURS[BANDS[i * len(BANDS) // n]], BRIGHTNESS) for i in range(n)])
 time.sleep(BLOCKS_HOLD_S)
 
 strip.fill(OFF)

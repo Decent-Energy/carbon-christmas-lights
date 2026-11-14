@@ -41,6 +41,22 @@ INDEX_COLOURS = {
 OFF = (0, 0, 0)
 
 
+def usb_host_attached():
+    """True when a computer, not a charger, is on the USB port: only a computer
+    gives the board a USB address (the USB controller's ADDR_ENDP register,
+    at the same place on the RP2040 and RP2350)."""
+    return machine.mem32[0x50110000] & 0x7F != 0
+
+
+def brightness():
+    """config.BRIGHTNESS, or config.USB_BRIGHTNESS while a computer's USB port,
+    which supplies less current than a charger, is powering the string."""
+    usb = getattr(config, "USB_BRIGHTNESS", None)
+    if usb is not None and usb_host_attached():
+        return usb
+    return config.BRIGHTNESS
+
+
 def scale(colour, brightness):
     """Dim a colour; the neopixel driver has no brightness setting of its own."""
     return tuple(int(c * brightness) for c in colour)
@@ -147,7 +163,9 @@ def fetch_colours():
         index = (entry.get("intensity") or {}).get("index")
         counts[index] = counts.get(index, 0) + 1
     print("Periods by index:", counts)
-    colours = colours_from_entries(entries, config.LED_COUNT, config.BRIGHTNESS)
+    level = brightness()
+    print("Brightness", level)
+    colours = colours_from_entries(entries, config.LED_COUNT, level)
     del entries
     gc.collect()
     return colours
