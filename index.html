@@ -60,6 +60,7 @@
   @keyframes twinkle { 50% { opacity: .22; } }
   @keyframes pulse { from { transform: scale(1); opacity: .9; } to { transform: scale(2.4); opacity: 0; } }
   .caption { display: flex; justify-content: space-between; gap: 16px; margin-top: clamp(6px, 1.2vh, 14px); }
+  .caption.start { margin: 0 0 clamp(6px, 1.2vh, 14px); }   /* sits above the string, beside the first light */
 
   .bottom { display: grid; grid-template-columns: 1fr auto; gap: clamp(20px, 4vw, 72px); align-items: end; }
   .mix { display: flex; gap: clamp(18px, 3.2vw, 64px); flex-wrap: wrap; margin-top: 10px; }
@@ -78,7 +79,7 @@
   /* a portrait screen, such as a foyer display turned on its side */
   @media (orientation: portrait) and (min-width: 761px) {
     main { --u: min(1vw, 0.5625vh);   /* one unit: 1% of the width of a 9:16 screen */
-      padding: 3.4vh 7vw; gap: 2.3vh; grid-template-rows: auto auto 1fr auto auto; }
+      padding: 3.2vh 7vw; gap: 2vh; grid-template-rows: auto auto 1fr auto auto; }
     .eyebrow { font-size: calc(var(--u) * 2); }
     .meta { font-size: calc(var(--u) * 1.9); }
     .hero { grid-template-columns: 1fr; gap: 2.4vh; }
@@ -124,8 +125,9 @@
   </section>
 
   <section class="garland">
+    <div class="caption start meta"><span id="oldest">50 hours ago</span></div>
     <svg id="string" role="img" aria-label="The string of 100 lights"></svg>
-    <div class="caption meta"><span id="oldest">50 hours ago</span><span>Each light is one half-hour of Britain's electricity</span><span id="newest">Now</span></div>
+    <div class="caption meta"><span>Each light is one half-hour of Britain's electricity</span><span id="newest">Now</span></div>
   </section>
 
   <section class="bottom">
@@ -267,7 +269,7 @@
     var perRow = Math.ceil(periods.length / rows), swag = perRow % 10 === 0 ? 10 : 5;
     var W = w >= 900 ? 1000 : w, pad = 14, step = (W - 2 * pad) / (perRow - 1);   // narrow screens draw at 1:1
     var big = tall && W === 1000;   // a large portrait screen: bigger bulbs, deeper swags
-    var r = Math.min(step * 0.4, big ? 15 : 9), dip = Math.min(big ? 22 : 13, step * 0.7), rowH = r * 2 + (big ? 56 : 34);
+    var r = Math.min(step * 0.4, big ? 15 : 9), dip = Math.min(big ? 22 : 13, step * 0.7), rowH = r * 2 + (big ? 50 : 34);
     var H = rows * rowH + 6;
     el_.setAttribute("viewBox", "0 0 " + W + " " + H);
     var nodes = [], defs = svg("defs", {}), blur = svg("filter", { id: "glow", x: "-150%", y: "-150%", width: "400%", height: "400%" });
@@ -320,8 +322,8 @@
     $("bulb").style.setProperty("--c", cssVar(now.index));
     $("value").textContent = now.value != null ? now.value : "–";
     $("unit").textContent = "g CO₂ per kWh · " + (now.index || "no rating");
-    $("oldest").textContent = fDay.format(periods[0].from) + " " + fTime.format(periods[0].from);
-    $("newest").textContent = "Now";
+    $("oldest").textContent = "Starts " + fDay.format(periods[0].from) + " " + fTime.format(periods[0].from) + " ↓";
+    $("newest").textContent = "Now ↑";
     $("updated").textContent = "updated " + fTime.format(new Date());
     drawString();
 
